@@ -1,0 +1,154 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NestEstimate | Find Your Home</title>
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">nest<span>estimate.</span></div>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="#predict">Price Calculator</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content">
+            <p class="eyebrow">A LITTLE CLOSER TO HOME</p>
+            <h1>Every home has a story.<br>
+                Let's find its <span>value.</span>
+            </h1>
+            <p class="hero-description">
+                Thinking about buying or selling a home in Pune?
+                Get a quick estimated property value using our
+                Pune-based house price prediction model.
+            </p>
+            <a href="#predict" class="hero-button">
+                Estimate my home's value →
+            </a>
+        </div>
+
+        <div class="hero-image">
+            <img src="{{ url_for('static', filename='home.jpg') }}"
+                 alt="A family settling into their new home">
+        </div>
+    </section>
+
+    <main class="container" id="predict">
+        <div class="section-heading">
+            <p class="eyebrow">LET'S GET STARTED</p>
+            <h2>Tell us about your property</h2>
+            <p>Currently estimating residential property prices in Pune, Maharashtra.</p>
+            <p>A few details will help us calculate an estimate.</p>
+        </div>
+
+        <div class="form-card">
+            <form action="/predict" method="POST">
+                <h3 class="form-section-title">Property details</h3>
+
+                <div class="form-grid">
+
+                    <div>
+                        <div class="field-label-row">
+                            <label>Property Type</label>
+                            <span>Residential only</span>
+                        </div>
+                        <select name="property_type" required>
+                            <option value="">Select Property Type</option>
+                            <option value="Apartment">Apartment</option>
+                            <option value="House">House</option>
+                            <option value="Villa">Villa</option>
+                            <option value="Penthouse">Penthouse</option>
+                            <option value="Builder Floor">Builder Floor</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label>Locality</label>
+                        <select name="locality" required>
+                            <option value="">Select Locality</option>
+                            {% for locality in localities %}
+                            <option value="{{ locality }}">{{ locality }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div>
+                        <label>Carpet Area (sq. ft.)</label>
+                        <input type="number" name="area" min="1" step="any"
+                               placeholder="e.g. 1200" required>
+                    </div>
+
+                    <div>
+                        <label>Bedrooms (BHK)</label>
+                        <select name="bedrooms" required>
+                            <option value="">Select BHK</option>
+                            <option value="1">1 BHK</option>
+                            <option value="2">2 BHK</option>
+                            <option value="3">3 BHK</option>
+                            <option value="4">4 BHK</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label>Bathrooms</label>
+                        <input type="number" name="bathrooms" min="1" max="10"
+                               placeholder="e.g. 2" required>
+                    </div>
+
+                    <div>
+                        <label>Furnishing</label>
+                        <select name="furnishing" required>
+                            <option value="">Select Furnishing</option>
+                            <option value="Unfurnished">Unfurnished</option>
+                            <option value="Semi-Furnished">Semi-Furnished</option>
+                            <option value="Furnished">Furnished</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <button type="submit" class="submit-button">
+                    Calculate property value →
+                </button>
+                <p class="form-note">It only takes a few seconds.</p>
+            </form>
+
+            {% if prediction %}
+            <div class="result" id="result">
+                <p class="eyebrow">YOUR ESTIMATED PROPERTY VALUE</p>
+                <h2>{{ prediction }}</h2>
+                <p class="disclaimer">
+                    This estimate is generated by a machine learning model
+                    trained on Pune property listings. Actual market prices
+                    may vary depending on property condition, exact location
+                    and other factors. This is not a professional valuation.
+                </p>
+            </div>
+            {% endif %}
+        </div>
+    </main>
+
+    <footer>
+        <p>nestestimate. &nbsp; | &nbsp; A House Price Prediction Project</p>
+    </footer>
+
+    {% if prediction %}
+    <script>
+        window.addEventListener("load", function () {
+            setTimeout(function () {
+                document.getElementById("result").scrollIntoView({
+                    behavior: "smooth",
+                    block: "center"
+                });
+            }, 100);
+        });
+    </script>
+    {% endif %}
+</body>
+</html>
